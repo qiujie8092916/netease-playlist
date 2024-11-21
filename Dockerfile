@@ -15,4 +15,4 @@ COPY ./index.js .
 
 RUN chmod +x ./index.js
 
-CMD ["node", "./index.js"]
+CMD ["node", "index.js"]
