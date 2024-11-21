@@ -6,7 +6,6 @@ COPY package.json package-lock.json ./
 
 RUN npm ci
 
-
 FROM node:20-alpine AS RUNTIME
 
 WORKDIR /usr/src/app
@@ -14,4 +13,6 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app .
 COPY ./index.js .
 
-CMD ["./index.js"]
+RUN chmod +x ./index.js
+
+CMD ["node", "./index.js"]
