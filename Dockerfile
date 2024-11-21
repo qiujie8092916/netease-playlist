@@ -1,11 +1,9 @@
-FROM node:20
+FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
 COPY . .
 
 RUN npm ci
-
-ENV CRON=''
 
 CMD ["node", "./index.js"]

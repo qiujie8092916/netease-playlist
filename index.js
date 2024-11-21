@@ -4,22 +4,48 @@ const path = require('path');
 
 require('dotenv').config();
 
+const retry_count = isNaN(Number(process.env.RETRY_COUNT)) ? 10 : Number(process.env.RETRY_COUNT);
 const cronExpression = process.env.CRON || '0 0 * * *';
 const playlistID = process.env.PLAYLIST_ID || '';
-const exportPath = '/usr/src/app/music_list'
-const main = () => {
-  if(!playlistID) {
+const immediately = process.env.IMMEDIATELY || 'false';
+const cookie = process.env.COOKIE || '';
+const exportPath = '/usr/src/app/music_list';
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const main = async () => {
+  if (!playlistID) {
     throw `Can not get playlistID of ${playlistID}`
   }
 
+  for (let count = 1; count <= retry_count; count++) {
+    console.log(`[${count}/${retry_count}]: starting...`);
+    try {
+      await task();
+      break;
+    } catch (e) {
+      console.error('prepare sleep 1s: ', e)
+      await sleep(1000);
+    }
+  }
+}
+
+const task = async () => {
   fetch(`https://music.163.com/api/playlist/detail?id=${playlistID}`, {
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Cookie': cookie,
+    }
   }).then(async response => {
     const json = await response.json();
 
     if (json.code !== 200) {
-      throw 'Can not get specified NetEase playlist';
+      console.error(`【${json.code}】requst failed: ${json.msg}`);
+      return Promise.reject(json.msg);
     }
+
+    console.log('tracks.length: ', json?.result?.tracks.length)
 
     const xiaomusic_music_list_json = [
       {
@@ -50,7 +76,16 @@ const main = () => {
           console.error('write file failed: ', err);
       }
     }
+
+    return Promise.resolve();
+  }).catch((err) => {
+    console.error(`requst failed: ${err}`);
+    return Promise.reject(err);
   });
+}
+
+if (immediately === 'true') {
+  main();
 }
 
 cron.schedule(cronExpression, main);
