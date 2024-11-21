@@ -12,9 +12,8 @@ WORKDIR /usr/src/app
 
 COPY --from=build /usr/src/app .
 COPY ./index.js .
-COPY ./docker-entrypoint.sh .
 
 RUN chmod +x ./index.js
-RUN chmod +x ./docker-entrypoint.sh
 
-CMD ["sh", "-c", "./docker-entrypoint.sh"]
+ENTRYPOINT []
+CMD ["node", "./index.js"]
