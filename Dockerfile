@@ -1,4 +1,4 @@
-FROM node:20-alpine AS build
+FROM node:16-alpine AS build
 
 WORKDIR /usr/src/app
 
@@ -6,7 +6,7 @@ COPY package.json package-lock.json ./
 
 RUN npm ci
 
-FROM node:20-alpine AS RUNTIME
+FROM node:16-alpine AS RUNTIME
 
 WORKDIR /usr/src/app
 
