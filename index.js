@@ -13,7 +13,6 @@ const exportPath = '/usr/src/app/music_list';
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-
 const main = async () => {
   if (!playlistID) {
     throw `Can not get playlistID of ${playlistID}`
