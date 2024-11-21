@@ -1,4 +1,4 @@
-通过网易云音乐歌单 ID，生成 [xiaomusic](https://github.com/hanxi/xiaomusic") 的在线歌单地址
+通过网易云音乐歌单 ID，生成 [xiaomusic](https://github.com/hanxi/xiaomusic") 的歌单内容
 
 ### docker 配置
 - /xxx/.env:/usr/src/app/.env
