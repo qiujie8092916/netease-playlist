@@ -1,4 +1,4 @@
-通过网易云音乐歌单 ID，生成 [xiaomusic#269](https://github.com/hanxi/xiaomusic/issues/269) 的歌单内容
+通过网易云音乐歌单 ID，生成 [xiaomusic#269](https://github.com/hanxi/xiaomusic/issues/269) 的歌单内容  
 本程序为独立模块，可 docker 部署，是不用[插件](https://github.com/hanxi/xiaomusic/issues/105)的另外实现方式
 
 ### docker

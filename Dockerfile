@@ -1,4 +1,4 @@
-FROM arm64v8/node:16-slim AS build
+FROM node:16-slim AS build
 
 WORKDIR /usr/src/app
 
