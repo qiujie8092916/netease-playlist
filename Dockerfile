@@ -13,6 +13,4 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app .
 COPY ./index.js .
 
-RUN chmod +x ./index.js
-
 CMD ["node", "./index.js"]
