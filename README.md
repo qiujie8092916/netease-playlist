@@ -3,7 +3,7 @@
 
 ### docker
 ```
-qiujie8092916/netease-playlist:latest
+qiujie8092916/netease-playlist
 ```
   
   
