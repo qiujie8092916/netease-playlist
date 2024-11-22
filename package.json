@@ -11,6 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
+    "NeteaseCloudMusicApi": "^4.25.0",
     "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.13"
   }
 }

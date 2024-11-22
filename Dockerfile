@@ -16,4 +16,5 @@ COPY ./index.js .
 RUN chmod +x ./index.js
 
 ENTRYPOINT []
+
 CMD ["node", "./index.js"]
