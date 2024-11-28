@@ -43,27 +43,23 @@ const task = async () => {
 
     console.log(`[debugger] trackIds`, trackIds);
 
-    Promise.all([song_url_v1({
-      id: trackIds.join(','),
-      level: 'jymaster',
-      cookie,
-    }), song_detail({
+    Promise.all([song_detail({
       ids: trackIds.join(','),
       cookie,
-    })]).then(([songUrlsResponse, songDetailsResponse]) => {
-      const songUrlsJson = songUrlsResponse.body;
+    })]).then(([songDetailsResponse]) => {
+      // const songUrlsJson = songUrlsResponse.body;
       const { songs } = songDetailsResponse.body;
 
       const musics = (songs ?? []).reduce((acc, detail) => {
         const { id, name } = detail;
-        const urlObj = (songUrlsJson.data ?? []).find(it => it.id === id);
+        // const urlObj = (songUrlsJson.data ?? []).find(it => it.id === id);
 
-        if (urlObj && urlObj.url) {
-          return acc.concat({
-            name,
-            url: urlObj.url
-          })
-        }
+        // if (urlObj && urlObj.url) {
+        return acc.concat({
+          name,
+          url: `https://music.163.com/song/media/outer/url?id=${id}.mp3`
+        })
+        // }
       }, []);
 
       new_data = [
