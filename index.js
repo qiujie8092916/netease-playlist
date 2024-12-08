@@ -16,6 +16,7 @@ let new_radio_data;
 /**
  * 记录已成功下载的音乐, 定义为 object[]，增加可扩展性
  * {
+ *  name: string; // 歌曲的名字
  *  id: number; // 歌曲的 id
  * }[]
  * 下个定时任务刷新歌单时，更新此变量，并遍历已下载的音乐取交集：
@@ -175,7 +176,7 @@ const task = async () => {
         // }
       }, []);
 
-      if (fs.existsSync(path)) {
+      if (fs.existsSync(exportPath)) {
           console.log(`[debugger] folder 【${exportPath}】 exsit`);
       } else {
         console.log(`[debugger] folder 【${exportPath}】 not exsit, creating...`);
@@ -263,6 +264,7 @@ const task = async () => {
                 // 下载成功，记录到 new_local_data
                 new_local_data = new_local_data.concat({
                   id,
+                  name,
                 })
               } catch (e) {
                 // 下载失败，打印错误，什么都不做，等到下次 cron 触发更新歌单时再尝试重新下载
@@ -272,31 +274,44 @@ const task = async () => {
               console.log(`[debugger] [${name}](${id}) get download url failed: `, e);
             }
           } else {
-              console.log(`[debugger] [${downloaded.name}](${downloaded.id}) is in local, do nothing`)
+            console.log(`[debugger] [${downloaded.name}](${downloaded.id}) is in local, do nothing`)
             // 已经下载过的音乐只做记录，直接跳过
-            new_local_data = new_local_data.concat(downloaded);
+            new_local_data = new_local_data.concat({
+              id,
+              name,
+            });
           }
         }
 
         // 歌单里删除了歌曲
-        // 不知道下载的歌曲的后缀名，只能遍历 outdir 下的所有文件，用 id 来匹配，找出文件名
-        const songsFilename = fs.readdirSync(outdir);
-        for (let i = 0; i < old_local_data.length; i++) {
-          const localSongRecord = old_local_data[i];
-          const { id } =  localSongRecord;
+        try {
+          // 不知道下载的歌曲的后缀名，只能遍历 outdir 下的所有文件，用 id 来匹配，找出文件名
+          const songsFilename = fs.readdirSync(outdir);
 
-          const exist = musics.find(music => music.id === id);
-          if (!exist) {
-            songsFilename.forEach(songFilename => {
-              const { name: filename} = splitFileNameAndExt(songFilename);
-              if (filename === `${id}`) {
-                console.log(`[debugger] ${id} is not in playlist, ready to delete...`)
-                // 歌单里找不到歌曲，说明歌曲已经从歌单里删除，同步删除本地音乐
-                fs.unlink(path.join(outdir, songFilename));
-                console.log(`[debugger] [${songFilename}] delete success`)
+          for (let i = 0; i < old_local_data.length; i++) {
+            const localSongRecord = old_local_data[i];
+            const { id } =  localSongRecord;
+
+            const exist = musics.find(music => music.id === id);
+            if (!exist) {
+              for(let j = 0; j < songsFilename.length; j++) {
+                const songFilename = songsFilename[j];
+                const { name: filename } = splitFileNameAndExt(songFilename);
+                if (filename === `${id}`) {
+                  console.log(`[debugger] ${id} is not in playlist, ready to delete...`)
+                  // 歌单里找不到歌曲，说明歌曲已经从歌单里删除，同步删除本地音乐
+                  try {
+                    await fs.unlinkSync(path.join(outdir, songFilename));
+                    console.log(`[debugger] [${songFilename}] delete success`)
+                  } catch (err) {
+                    console.error(`[debugger] [${songFilename}] delete failed: `, err.toString());
+                  }
+                }
               }
-            })
+            }
           }
+        } catch (e) {
+          throw `readdirSync failed: ${e.toString()}`;
         }
         overwriteLocalFile(new_local_data);
       }
