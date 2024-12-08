@@ -268,7 +268,7 @@ const task = async () => {
                 })
               } catch (e) {
                 // 下载失败，打印错误，什么都不做，等到下次 cron 触发更新歌单时再尝试重新下载
-                console.error(`[debugger] [${name}](${id}) download failed: ${err.toString()}`)
+                console.error(`[debugger] [${name}](${id}) download failed: ${e.toString()}`)
               }
             } catch(e) {
               console.log(`[debugger] [${name}](${id}) get download url failed: `, e);
