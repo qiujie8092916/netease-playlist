@@ -1,0 +1,24 @@
+{
+  "name": "netease-playlist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cli-progress": "^3.12.0",
+    "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
+    "NeteaseCloudMusicApi": "^4.25.0",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
+    "@types/lodash": "^4.17.13"
+  }
+}
