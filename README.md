@@ -32,6 +32,7 @@ qiujie8092916/netease-playlist
         }
     ]
     ```
+    - 默认下载到 <code>/usr/src/app/music_list</code>，可挂载此路径到宿主机并挂载到 [xiaomusic](https://github.com/hanxi/xiaomusic) 的 `XIAOMUSIC_DOWNLOAD_PATH` 对应的路径
 
 
 ### 环境变量
@@ -42,7 +43,6 @@ qiujie8092916/netease-playlist
 | MUSIC_U       | T        | 网易云音乐的 web cookie，有效期有一年多，没有 cookie，可能不能获取歌曲的播放地址                                                                             |
 | IMMEDIATELY   | F        | 是否立即执行。默认：false                                                                                                               |
 | METHOD        | F        | 默认: ["radio", "local"], 歌单方式、本地音乐方式                                                                                           |
-| OUTDIR        | F        | 若 `METHOD` 包含 'local'，则需要传入下载输出的路径，此路径可以挂载到 [xiaomusic](https://github.com/hanxi/xiaomusic) 的 `XIAOMUSIC_DOWNLOAD_PATH` 对应的路径 |
 
 
 ### 鸣谢
