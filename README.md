@@ -34,6 +34,17 @@ qiujie8092916/netease-playlist
     ```
     - 默认下载到 <code>/usr/src/app/music_list</code>，可挂载此路径到宿主机并挂载到 [xiaomusic](https://github.com/hanxi/xiaomusic) 的 `XIAOMUSIC_DOWNLOAD_PATH` 对应的路径
 
+### EXAMPLE
+```yaml
+services:
+  playlist:
+    image: qiujie8092916/netease-playlist:latest
+    restart: unless-stopped
+    container_name: playlist
+    volumes:
+      - /opt/devops/music/playlist/.env:/usr/src/app/.env
+      - /opt/devops/music/music_list:/usr/src/app/music_list
+```
 
 ### 环境变量
 | Variable Name | Required | Comment                                                                                                                       |  
@@ -47,4 +58,6 @@ qiujie8092916/netease-playlist
 
 ### 鸣谢
 - [xiaomusic](https://github.com/hanxi/xiaomusic)
+- [youtube-dl-exec](https://github.com/microlinkhq/youtube-dl-exec)
+- [node-fluent-ffmpeg](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg)
 - [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
