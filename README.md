@@ -1,5 +1,6 @@
 通过网易云音乐歌单 ID，下载歌曲或[生成歌单配置](https://github.com/hanxi/xiaomusic/issues/269)  
-本程序为独立模块，可 docker 部署，可作为不用[插件](https://github.com/hanxi/xiaomusic/issues/105)的另外实现方式
+本程序为独立模块，可 docker 部署，可作为不用[插件](https://github.com/hanxi/xiaomusic/issues/105)的另外实现方式  
+如果使用 local 模式，因为下载了歌单里的歌曲，不一定使用 [xiaomusic](https://github.com/hanxi/xiaomusic)，想怎么听都可以
 
 ### docker
 ```
