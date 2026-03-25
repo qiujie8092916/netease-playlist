@@ -36,9 +36,8 @@ jobs:
         with:
           images: ${{ vars.DOCKERHUB_IMAGE != '' && vars.DOCKERHUB_IMAGE || 'qiujie8092916/netease-playlist' }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest
             type=ref,event=tag
-            type=sha
 
       - name: Build and push to DockerHub
         if: ${{ env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_TOKEN != '' }}
