@@ -55,6 +55,7 @@ services:
 | MUSIC_U       | T        | 网易云音乐的 web cookie，有效期有一年多，没有 cookie，可能不能获取歌曲的播放地址                                                                             |
 | IMMEDIATELY   | F        | 是否立即执行。默认：false                                                                                                               |
 | METHOD        | F        | 默认: ["radio", "local"], 歌单方式、本地音乐方式                                                                                           |
+| EXPORT_PATH   | F        | 默认: /usr/src/app/music_list, 歌曲下载目录                                                                                  |
 
 
 ### 鸣谢
