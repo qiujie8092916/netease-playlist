@@ -36,7 +36,7 @@ const main = async () => {
     throw `Can not parse method of ${methodString}`;
   }
 
-  task();
+  await task();
 };
 
 const LoggerError = (...args) => {
@@ -108,6 +108,20 @@ const remove = (pathname, logger) => {
   } catch (err) {
     LoggerError(`${logger} delete failed: `, err.toString());
   }
+};
+
+const isRegularFile = (pathname) => {
+  try {
+    return fs.statSync(pathname).isFile();
+  } catch (err) {
+    LoggerError(`stat file failed: ${pathname}`, err.toString());
+    return false;
+  }
+};
+
+const parseSongIdFromFileName = (nameWithoutExt) => {
+  const match = /\.(\d+)$/.exec(nameWithoutExt);
+  return match ? match[1] : null;
 };
 
 const getImageFormat = (imagePath) => {
@@ -265,7 +279,7 @@ const download = async ({ url, format, name, id, detail }) => {
 };
 
 const task = async () => {
-  playlist_detail({
+  return playlist_detail({
     id: playlistID,
     cookie,
   })
@@ -281,7 +295,7 @@ const task = async () => {
 
       LoggerLog(`trackIds`, JSON.stringify(trackIds));
 
-      Promise.all([
+      return Promise.all([
         song_detail({
           ids: trackIds.join(","),
           cookie,
@@ -355,7 +369,7 @@ const task = async () => {
             if (downloaded && path.parse(downloaded).ext === ".part") {
               // 之前下载失败
               // 删除过程文件
-              remove(path.join(exportPath, downloaded), `[${downloaded}]`);
+              remove(downloaded, `[${downloaded}]`);
             }
 
             console.log("\n");
@@ -410,6 +424,12 @@ const task = async () => {
 
             for (let i = 0; i < old_local_data.length; i++) {
               const localSongRecord = old_local_data[i];
+
+              if (!isRegularFile(localSongRecord)) {
+                // 过滤目录，避免 unlink 目录触发 EISDIR
+                continue;
+              }
+
               const { name: fullName, ext, base } = path.parse(localSongRecord);
 
               if (ext === ".part") {
@@ -417,7 +437,17 @@ const task = async () => {
                 continue;
               }
 
-              const [, id] = splitStringAtLastDot(fullName);
+              if (base === xiaomusic_music_list) {
+                // 保留导出的歌单 JSON
+                continue;
+              }
+
+              const id = parseSongIdFromFileName(fullName);
+
+              if (!id) {
+                // 非歌曲文件名格式，跳过
+                continue;
+              }
 
               const exist = musics.find((music) => `${music.id}` === `${id}`);
 
@@ -437,7 +467,13 @@ const task = async () => {
 };
 
 if (immediately === "true") {
-  main();
+  main().catch((err) => {
+    LoggerError(`task failed: ${err.toString()}`);
+  });
 }
 
-cron.schedule(cronExpression, main);
+cron.schedule(cronExpression, () => {
+  main().catch((err) => {
+    LoggerError(`task failed: ${err.toString()}`);
+  });
+});
